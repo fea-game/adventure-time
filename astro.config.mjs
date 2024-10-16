@@ -9,6 +9,9 @@ import node from "@astrojs/node";
 export default defineConfig({
   integrations: [tailwind()],
   output: "server",
+  server: {
+    port: process.env.PORT ? parseInt(process.env.PORT) : 3000,
+  },
   adapter: node({
     mode: "standalone",
   }),
