@@ -1,7 +1,9 @@
 ---
-import Logo from "../components/Logo.astro";
-import AuthenticationAction from "../components/AuthenticationAction.astro";
-import Navigation from "../components/Navigation.astro";
+import Logo from "../components/common/Logo.astro";
+import AuthenticationAction from "../components/auth/AuthenticationAction.astro";
+import Navigation from "../components/nav/Navigation.astro";
+import Link from "../components/nav/Link.astro";
+import { SignedIn } from "@clerk/astro/components";
 
 interface Props {
   title: string;
@@ -20,18 +22,15 @@ const { title } = Astro.props;
     <meta name="generator" content={Astro.generator} />
     <title>{title}</title>
   </head>
-  <body class="bg-gray-800 text-white">
-    <!--
-    <TopNav>
-      <Logo slot="logo" />
-      <AuthenticationAction slot="action" />
-    </TopNav>
-    -->
+  <body>
     <Navigation>
       <Logo slot="logo" />
       <AuthenticationAction slot="auth" />
+      <SignedIn>
+        <Link href="/stories" label="Story" />
+      </SignedIn>
     </Navigation>
-    <main class="px-8 xl:px-16 py-6 xl:py-12">
+    <main>
       <slot />
     </main>
   </body>

@@ -1,0 +1,13 @@
+---
+const { id, type = "button" } = Astro.props;
+---
+
+<button
+  id={id}
+  type={type}
+  class="inline-flex items-center justify-center h-10 gap-2 px-5 text-sm font-medium tracking-wide text-white transition duration-300 rounded shadow-md focus-visible:outline-none whitespace-nowrap bg-teal-500 shadow-teal-200 hover:bg-teal-600 hover:shadow-sm hover:shadow-teal-200 focus:bg-teal-700 focus:shadow-sm focus:shadow-teal-200 disabled:cursor-not-allowed disabled:border-teal-300 disabled:bg-teal-300 disabled:shadow-none"
+>
+  <span>
+    <slot>Button</slot>
+  </span>
+</button>

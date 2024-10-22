@@ -1,0 +1,99 @@
+---
+import Button from "../common/Button.astro";
+import TextArea from "../common/TextArea.astro";
+---
+
+<div class="px-8 xl:px-16 py-6 xl:py-12 flex flex-col gap-y-4 bg-teal-500/20">
+  <label class="text-3xl font-semibold font-heading">Story</label>
+  <div id="output_story" class="flex flex-col gap-y-6"></div>
+</div>
+
+<form
+  class="px-8 xl:px-16 py-6 xl:py-12 grid grid-flow-row md:grid-flow-col gap-12 justify-items-stretch"
+>
+  <div class="flex flex-col gap-y-4">
+    <label class="text-3xl font-semibold font-heading">Player A</label>
+    <TextArea
+      id="input_player_a"
+      placeholder="Type away Player A..."
+      helper="What do you want to do?"
+    />
+    <Button id="submit_player_a">Submit</Button>
+  </div>
+  <div class="flex flex-col gap-y-4">
+    <label class="text-3xl font-semibold font-heading">Player B</label>
+    <TextArea
+      id="input_player_b"
+      placeholder="Type away Player B..."
+      helper="What do you want to do?"
+    />
+    <Button id="submit_player_b">Submit</Button>
+  </div>
+</form>
+
+<script>
+  const story = document.getElementById("output_story");
+
+  const act = (playerId: string) => (action: string) => {
+    if (story) {
+      story.append(
+        storyEntry({
+          actor: playerId,
+          text: action,
+          num: story.children.length,
+        })
+      );
+    }
+  };
+
+  const players = ["player_a", "player_b"];
+
+  players.forEach((playerId) => {
+    const button = document.getElementById(`submit_${playerId}`);
+
+    if (button) {
+      const input = document.getElementById(
+        `input_${playerId}`
+      ) as HTMLTextAreaElement | null;
+      const playerAct = act(playerId);
+
+      button.addEventListener("click", () => {
+        const description = input?.value;
+
+        if (description) {
+          playerAct(description);
+        }
+      });
+
+      playerAct(
+        Math.random() > 0.5 ? "Fuck, let's do it!" : "Here we go again *sigh*"
+      );
+    }
+  });
+
+  function storyEntry({
+    actor,
+    num,
+    text,
+  }: {
+    actor: string;
+    num: number;
+    text: string;
+  }) {
+    const isEven = num % 2 === 0;
+
+    const container = document.createElement("section");
+    container.className = `flex flex-col gap-y-1 ${isEven ? "text-left" : "text-right"}`;
+
+    const title = document.createElement("h3");
+    title.className = "text-lg";
+    title.textContent = `${isEven ? "> " : ""}${actor}${!isEven ? " <" : ""}`;
+    container.append(title);
+
+    const content = document.createElement("p");
+    content.textContent = text;
+    container.append(content);
+
+    return container;
+  }
+</script>

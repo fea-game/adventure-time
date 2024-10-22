@@ -1,0 +1,14 @@
+---
+const { href = "#", label = "Link" } = Astro.props;
+
+console.log(Astro.props);
+---
+
+<a
+  href={href}
+  role="menuitem"
+  aria-haspopup="false"
+  class="flex items-center gap-2 py-4 transition-colors duration-300 hover:text-emerald-500 focus:text-emerald-600 focus:outline-none focus-visible:outline-none lg:px-8"
+>
+  {label}
+</a>

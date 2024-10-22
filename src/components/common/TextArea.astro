@@ -1,0 +1,25 @@
+---
+const {
+  id,
+  disabled = false,
+  helper = "",
+  placeholder = "",
+  rows = 5,
+} = Astro.props;
+---
+
+<div>
+  <textarea
+    id={id}
+    name={id}
+    disabled={disabled}
+    placeholder={placeholder}
+    rows={rows}
+    class="w-full p-4 transition-all border rounded outline-none focus-visible:outline-none peer border-slate-200 text-slate-500 autofill:bg-white invalid:border-pink-500 invalid:text-pink-500 focus:border-teal-500 focus:outline-none invalid:focus:border-pink-500 disabled:cursor-not-allowed disabled:bg-slate-50 disabled:text-slate-400 text-sm"
+  ></textarea>
+  <small
+    class="flex justify-between w-full px-4 py-1 text-xs transition text-slate-400 peer-invalid:text-pink-500"
+  >
+    <span>{helper}</span>
+  </small>
+</div>
