@@ -15,9 +15,9 @@ import { filterUndefined } from "../utils/filterUndefined";
 export class OpenAiTextGenerationClient implements TextGenerationClient {
   private static DEFAULT_CONFIG = {
     model: "gpt-3.5-turbo", // Default model
-    temperature: 0.7, // Creativity level
+    temperature: 0.9, // Creativity level
     topP: 0.9, // Nucleus sampling level
-    maxTokens: 150, // Default token limit
+    maxTokens: 300, // Default token limit
     frequencyPenalty: 0, // Penalize repeated words
     presencePenalty: 0.6, // Encourage new topics
   } as const satisfies Omit<NonUndefined<TextGenerationClientConfig>, "apiKey">;
@@ -28,7 +28,7 @@ export class OpenAiTextGenerationClient implements TextGenerationClient {
 
   constructor(config: TextGenerationClientConfig) {
     this.config = this.addDefaults(config);
-    this.openAi = new OpenAI({ apiKey: this.config.apiKey, timeout: 5000 });
+    this.openAi = new OpenAI({ apiKey: this.config.apiKey, timeout: 10000 });
   }
 
   private addDefaults({

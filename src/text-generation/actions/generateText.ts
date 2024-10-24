@@ -25,7 +25,9 @@ export const generateText = defineAction({
       });
     }
 
-    const result = await client.generate(input);
+    const result = await client.generate({
+      prompt: `From ${input.player}: ${input.prompt}`,
+    });
 
     if (result.isError) throw result.error;
 
