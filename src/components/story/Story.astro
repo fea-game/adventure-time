@@ -32,9 +32,11 @@ import TextArea from "../common/TextArea.astro";
 </form>
 
 <script>
+  import { actions } from "astro:actions";
+
   const story = document.getElementById("output_story");
 
-  const act = (playerId: string) => (action: string) => {
+  const act = (playerId: string) => async (action: string) => {
     if (story) {
       story.append(
         storyEntry({
@@ -43,6 +45,27 @@ import TextArea from "../common/TextArea.astro";
           num: story.children.length,
         })
       );
+
+      const { data, error } = await actions.generateText({
+        player: playerId,
+        prompt: action,
+      });
+
+      if (error) {
+        console.error("ERROR: generateText", error);
+      }
+
+      console.log("RESPONSE", data);
+
+      if (data && data.message) {
+        story.append(
+          storyEntry({
+            actor: "Game Master",
+            text: data.message,
+            num: story.children.length,
+          })
+        );
+      }
     }
   };
 
@@ -64,10 +87,6 @@ import TextArea from "../common/TextArea.astro";
           playerAct(description);
         }
       });
-
-      playerAct(
-        Math.random() > 0.5 ? "Fuck, let's do it!" : "Here we go again *sigh*"
-      );
     }
   });
 
@@ -80,6 +99,7 @@ import TextArea from "../common/TextArea.astro";
     num: number;
     text: string;
   }) {
+    console.log("ENTRY", { actor, num, text });
     const isEven = num % 2 === 0;
 
     const container = document.createElement("section");
