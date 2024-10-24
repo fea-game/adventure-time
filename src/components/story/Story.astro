@@ -1,11 +1,18 @@
 ---
 import Button from "../common/Button.astro";
+import Loader from "../common/Loader.astro";
 import TextArea from "../common/TextArea.astro";
 ---
 
 <div class="px-8 xl:px-16 py-6 xl:py-12 flex flex-col gap-y-4 bg-teal-500/20">
-  <label class="text-3xl font-semibold font-heading">Story</label>
+  <div class="flex justify-between items-center">
+    <label class="text-3xl font-semibold font-heading">Story</label>
+    <Button id="submit_init_story">▶️ Start with sample Story</Button>
+  </div>
   <div id="output_story" class="flex flex-col gap-y-6"></div>
+  <div class="flex justify-center invisible" id="loader">
+    <Loader />
+  </div>
 </div>
 
 <form
@@ -32,63 +39,129 @@ import TextArea from "../common/TextArea.astro";
 </form>
 
 <script>
-  import { actions } from "astro:actions";
+  import { entries as initialStoryEntries } from "../../text-generation/prompts/story.v1";
+  import { act } from "./act";
 
   const story = document.getElementById("output_story");
-
-  const act = (playerId: string) => async (action: string) => {
-    if (story) {
-      story.append(
-        storyEntry({
-          actor: playerId,
-          text: action,
-          num: story.children.length,
-        })
-      );
-
-      const { data, error } = await actions.generateText({
-        player: playerId,
-        prompt: action,
-      });
-
-      if (error) {
-        console.error("ERROR: generateText", error);
-      }
-
-      console.log("RESPONSE", data);
-
-      if (data && data.message) {
-        story.append(
-          storyEntry({
-            actor: "Game Master",
-            text: data.message,
-            num: story.children.length,
-          })
-        );
-      }
-    }
-  };
-
+  const loader = document.getElementById("loader");
   const players = ["player_a", "player_b"];
+  let isStoryInitiated = false;
 
-  players.forEach((playerId) => {
-    const button = document.getElementById(`submit_${playerId}`);
+  function hydrateUi() {
+    if (story) {
+      players.forEach((playerId) => {
+        const button = document.getElementById(`submit_${playerId}`);
 
-    if (button) {
-      const input = document.getElementById(
-        `input_${playerId}`
-      ) as HTMLTextAreaElement | null;
-      const playerAct = act(playerId);
+        if (button) {
+          const input = document.getElementById(
+            `input_${playerId}`
+          ) as HTMLTextAreaElement | null;
+          const playerAct = addPlayerAction(playerId);
 
-      button.addEventListener("click", () => {
-        const description = input?.value;
+          button.addEventListener("click", () => {
+            const description = input?.value;
 
-        if (description) {
-          playerAct(description);
+            if (description) {
+              playerAct(description);
+            }
+          });
         }
       });
     }
-  });
+
+    const button = document.getElementById("submit_init_story");
+    if (button) {
+      button.addEventListener("click", async () => {
+        if (!isStoryInitiated) {
+          for (const entry of initialStoryEntries) {
+            await addPlayerAction(entry.player!)(entry.prompt!);
+          }
+        }
+      });
+    }
+  }
+
+  function addPlayerAction(playerId: string) {
+    const playerAct = act(playerId);
+    return async (action: string) => {
+      disableInitiateStory();
+
+      story?.append(
+        storyEntry({
+          actor: playerId,
+          text: action,
+          num: story?.children.length ?? 0,
+        })
+      );
+
+      setIsLoading();
+
+      const result = await playerAct(action);
+
+      setIsDone();
+
+      if (result.isError) {
+        alert(result.error);
+      }
+
+      if (result.isSuccess) {
+        story?.append(
+          storyEntry({
+            actor: result.data.actor,
+            text: result.data.text,
+            num: story?.children.length ?? 0,
+          })
+        );
+      }
+    };
+  }
+
+  function disableInitiateStory() {
+    if (isStoryInitiated) return;
+
+    isStoryInitiated = true;
+
+    const button = document.getElementById("submit_init_story");
+    if (button instanceof HTMLButtonElement) {
+      button.disabled = true;
+    }
+  }
+
+  let playerButtons: Array<HTMLButtonElement | null> = [];
+
+  function setIsLoading() {
+    loader?.classList.remove("invisible");
+    if (playerButtons.length !== players.length) {
+      playerButtons = players.map(
+        (playerId) =>
+          document.getElementById(
+            `submit_${playerId}`
+          ) as HTMLButtonElement | null
+      );
+    }
+    playerButtons.forEach((button) => {
+      if (button) {
+        button.disabled = true;
+      }
+    });
+  }
+
+  function setIsDone() {
+    loader?.classList.add("invisible");
+    if (playerButtons.length !== players.length) {
+      playerButtons = players.map(
+        (playerId) =>
+          document.getElementById(
+            `submit_${playerId}`
+          ) as HTMLButtonElement | null
+      );
+    }
+    playerButtons.forEach((button) => {
+      if (button) {
+        button.disabled = false;
+      }
+    });
+  }
 
   function storyEntry({
     actor,
@@ -99,7 +172,6 @@ import TextArea from "../common/TextArea.astro";
     num: number;
     text: string;
   }) {
-    console.log("ENTRY", { actor, num, text });
     const isEven = num % 2 === 0;
 
     const container = document.createElement("section");
@@ -116,4 +188,6 @@ import TextArea from "../common/TextArea.astro";
 
     return container;
   }
+
+  hydrateUi();
 </script>
