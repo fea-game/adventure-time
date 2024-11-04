@@ -1,13 +1,4 @@
-import { clerkMiddleware, createRouteMatcher } from "@clerk/astro/server";
+import { sequence } from "astro:middleware";
+import { authentication, authorization } from "./auth/middleware";
 
-const isPublicRoute = createRouteMatcher(["/"]);
-
-export const onRequest = clerkMiddleware((auth, context) => {
-  const { redirectToSignIn, userId } = auth();
-
-  if (!isPublicRoute(context.request) && !userId) {
-    return redirectToSignIn();
-  }
-
-  return;
-});
+export const onRequest = sequence(authentication, authorization);
