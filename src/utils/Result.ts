@@ -1,21 +1,21 @@
 export type ErrorResult<E> = {
   isError: true;
-  isSuccess: false;
+  isOk: false;
   error: E;
 };
 
-export type SuccessResult<T> = {
+export type OkResult<T> = {
   isError: false;
-  isSuccess: true;
-  data: T;
+  isOk: true;
+  value: T;
 };
 
-export type Result<T, E> = ErrorResult<E> | SuccessResult<T>;
+export type Result<T, E> = ErrorResult<E> | OkResult<T>;
 
 export function err<E>(error: E): ErrorResult<E> {
-  return { error, isError: true, isSuccess: false };
+  return { error, isError: true, isOk: false };
 }
 
-export function ok<T>(data: T): SuccessResult<T> {
-  return { data, isError: false, isSuccess: true };
+export function ok<T>(value: T): OkResult<T> {
+  return { value, isError: false, isOk: true };
 }

@@ -8,11 +8,11 @@ const database = getDatabase();
 
 if (database.isError) throw database.error;
 
-const usersResult = await User.all(database.data);
+const usersResult = await User.all(database.value);
 
 if (usersResult.isError) throw usersResult.error;
 
-const users = usersResult.data;
+const users = usersResult.value;
 
 const currentUser = await Astro.locals.currentUser();
 ---

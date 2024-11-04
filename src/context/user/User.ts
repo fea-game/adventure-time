@@ -25,7 +25,7 @@ export class User {
         return err(result.error);
       }
 
-      return ok(result.data !== null);
+      return ok(result.value !== null);
     }
 
     if (User.isWithExternalId(user)) {
@@ -35,7 +35,7 @@ export class User {
         return err(result.error);
       }
 
-      return ok(result.data !== null);
+      return ok(result.value !== null);
     }
 
     return err(new Error("User is not identifiable!"));
@@ -51,7 +51,7 @@ export class User {
       return err(isExistsResult.error);
     }
 
-    if (isExistsResult.data) {
+    if (isExistsResult.value) {
       return err(new Error("User already exists!"));
     }
 

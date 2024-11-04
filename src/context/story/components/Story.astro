@@ -104,11 +104,11 @@ import TextArea from "../../../components/TextArea.astro";
         alert(result.error);
       }
 
-      if (result.isSuccess) {
+      if (result.isOk) {
         story?.append(
           storyEntry({
-            actor: result.data.actor,
-            text: result.data.text,
+            actor: result.value.actor,
+            text: result.value.text,
             num: story?.children.length ?? 0,
           })
         );

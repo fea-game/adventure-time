@@ -31,6 +31,6 @@ export const generateText = defineAction({
 
     if (result.isError) throw result.error;
 
-    return result.data;
+    return result.value;
   },
 });

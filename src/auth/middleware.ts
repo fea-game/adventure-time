@@ -40,14 +40,14 @@ export const authorization = defineMiddleware(async (context, next) => {
 
   const userResult = await User.findByExternalId(
     { externalSystem, externalId },
-    database.data
+    database.value
   );
 
   if (userResult.isError) {
     console.error("Error while trying to fetch user!", userResult.error);
   }
 
-  if (userResult.isSuccess && userResult.data?.role === "admin") return next();
+  if (userResult.isOk && userResult.value?.role === "admin") return next();
 
   console.info("User is no admin.");
 
