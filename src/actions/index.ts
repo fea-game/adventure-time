@@ -1,7 +1,7 @@
 import { defineAction } from "astro:actions";
 import { z } from "astro:schema";
 
-import * as textGenerationActions from "../text-generation/actions";
+import * as textGenerationActions from "../context/text-generation/actions";
 
 export const server = {
   getGreeting: defineAction({

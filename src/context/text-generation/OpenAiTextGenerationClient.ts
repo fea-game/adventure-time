@@ -1,6 +1,6 @@
 import OpenAI from "openai";
-import { err, ok } from "../utils/Result";
-import { toError } from "../utils/toError";
+import { err, ok } from "../../utils/Result";
+import { toError } from "../../utils/toError";
 import type {
   TextGenerationClient,
   TextGenerationClientConfig,
@@ -9,8 +9,8 @@ import type {
 } from "./types/TextGenerationClient";
 import type { ChatCompletionMessageParam } from "openai/resources/chat/completions.mjs";
 import { message } from "./prompts/setup.v1";
-import type { NonUndefined } from "../utils/NonUndefined";
-import { filterUndefined } from "../utils/filterUndefined";
+import type { NonUndefined } from "../../utils/NonUndefined";
+import { filterUndefined } from "../../utils/filterUndefined";
 
 export class OpenAiTextGenerationClient implements TextGenerationClient {
   private static DEFAULT_CONFIG = {
