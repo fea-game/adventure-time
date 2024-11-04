@@ -1,5 +1,5 @@
 import { actions } from "astro:actions";
-import { err, ok, type Result } from "../../utils/Result";
+import { err, ok, type Result } from "../../../utils/Result";
 
 export function act(playerId: string) {
   return async (
