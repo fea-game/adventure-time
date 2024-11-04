@@ -1,4 +1,4 @@
-import type { Result } from "../../utils/Result";
+import type { Result } from "../../../utils/Result";
 
 export interface TextGenerationClient {
   generate(req: TextGenerationRequest): Promise<TextGenerationResponse>;

@@ -68,7 +68,7 @@ export class User {
       const result = await database.insert(users).values(values).returning();
 
       if (result.length === 1 && result[0]) {
-        return ok(new User(result[0], database));
+        return ok(new User(result[0]));
       }
 
       throw new Error("No new user created!");
@@ -92,7 +92,7 @@ export class User {
         .where(eq(users.id, params.id));
 
       if (result.length === 1 && result[0]) {
-        return ok(new User(result[0], database));
+        return ok(new User(result[0]));
       }
 
       return ok(null);
@@ -121,7 +121,7 @@ export class User {
         );
 
       if (result.length === 1 && result[0]) {
-        return ok(new User(result[0], database));
+        return ok(new User(result[0]));
       }
 
       return ok(null);
@@ -139,7 +139,7 @@ export class User {
     try {
       const result = await database.select().from(users);
 
-      return ok(result.map((user) => new User(user, database)));
+      return ok(result.map((user) => new User(user)));
     } catch (e) {
       return err(
         new Error((e as Error).message ?? "Listing Users failed!", { cause: e })
@@ -147,16 +147,12 @@ export class User {
     }
   }
 
-  private database: Database;
-
   public readonly id: string;
   public readonly role: "admin" | "member";
   public readonly externalId: string;
   public readonly externalSystem: "clerk";
 
-  constructor(params: Omit<User, "database">, database: Database) {
-    this.database = database;
-
+  constructor(params: Omit<User, "database">) {
     this.id = params.id;
     this.role = params.role;
     this.externalId = params.externalId;
