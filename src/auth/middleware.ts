@@ -26,11 +26,17 @@ export const authorization = defineMiddleware(async (context, next) => {
   const externalId = context.locals.auth().userId;
   const externalSystem = context.locals.authProvider;
 
-  if (!externalId) return next("/");
+  if (!externalId) {
+    console.error("No externalId found!");
+    return next("/");
+  }
 
   const database = getDatabase();
 
-  if (database.isError) throw database.error;
+  if (database.isError) {
+    console.error("Error while trying to connection database!", database.error);
+    return next("/");
+  }
 
   const userResult = await User.findByExternalId(
     { externalSystem, externalId },
@@ -42,6 +48,8 @@ export const authorization = defineMiddleware(async (context, next) => {
   }
 
   if (userResult.isSuccess && userResult.data?.role === "admin") return next();
+
+  console.info("User is no admin.");
 
   return next("/");
 });
