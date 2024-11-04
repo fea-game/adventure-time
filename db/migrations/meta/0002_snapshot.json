@@ -1,0 +1,63 @@
+{
+  "version": "6",
+  "dialect": "sqlite",
+  "id": "12c0a9a6-c184-4320-bf21-fdd84c95854b",
+  "prevId": "99bc67b8-2766-44d4-914f-aa0ee403faef",
+  "tables": {
+    "User": {
+      "name": "User",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "'cd3c63ec-20d4-4e17-a685-1344f385e32a'"
+        },
+        "externalId": {
+          "name": "externalId",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "externalSystem": {
+          "name": "externalSystem",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        }
+      },
+      "indexes": {
+        "User_externalId_unique": {
+          "name": "User_externalId_unique",
+          "columns": [
+            "externalId"
+          ],
+          "isUnique": true
+        }
+      },
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {}
+    }
+  },
+  "views": {},
+  "enums": {},
+  "_meta": {
+    "schemas": {},
+    "tables": {
+      "\"users\"": "\"User\""
+    },
+    "columns": {
+      "\"User\".\"external_id\"": "\"User\".\"externalId\"",
+      "\"User\".\"external_system\"": "\"User\".\"externalSystem\""
+    }
+  },
+  "internal": {
+    "indexes": {}
+  }
+}

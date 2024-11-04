@@ -1,0 +1,86 @@
+---
+import Layout from "../../layouts/Layout.astro";
+
+import { getDatabase } from "../../database/getDatabase";
+import { User } from "../../context/user/User";
+
+const database = getDatabase();
+
+if (database.isError) throw database.error;
+
+const usersResult = await User.all(database.data);
+
+if (usersResult.isError) throw usersResult.error;
+
+const users = usersResult.data;
+
+const currentUser = await Astro.locals.currentUser();
+---
+
+<Layout title="Adventure Time - Users">
+  <h1 class="text-4xl font-bold font-heading px-8 xl:px-16 py-8 xl:py-16">
+    Users
+  </h1>
+  <div class="px-8 xl:px-16 flex flex-col gap-y-4">
+    <div>
+      <h2 class="text-2xl font-bold font-heading">Current User</h2>
+      <div><strong>Id: </strong>{currentUser?.id}</div>
+      <div>
+        <strong>Email: </strong>{currentUser?.emailAddresses[0]?.emailAddress}
+      </div>
+    </div>
+    <div class="w-full overflow-x-auto">
+      <table
+        class="w-full text-left border border-separate rounded border-slate-200"
+        cellspacing="0"
+      >
+        <thead>
+          <tr>
+            <th
+              scope="col"
+              class="h-12 px-6 text-sm font-medium border-l first:border-l-0 stroke-slate-700 text-slate-700 bg-slate-100"
+              >Id</th
+            >
+            <th
+              scope="col"
+              class="h-12 px-6 text-sm font-medium border-l first:border-l-0 stroke-slate-700 text-slate-700 bg-slate-100"
+              >Role</th
+            >
+            <th
+              scope="col"
+              class="h-12 px-6 text-sm font-medium border-l first:border-l-0 stroke-slate-700 text-slate-700 bg-slate-100"
+              >External System</th
+            >
+            <th
+              scope="col"
+              class="h-12 px-6 text-sm font-medium border-l first:border-l-0 stroke-slate-700 text-slate-700 bg-slate-100"
+              >External Id</th
+            >
+          </tr>
+        </thead>
+        <tbody>
+          {
+            users.map(({ id, role, externalId, externalSystem }) => (
+              <tr class="transition-colors duration-300 hover:bg-slate-50">
+                <>
+                  <td class="h-12 px-6 text-sm transition duration-300 border-t border-l first:border-l-0 border-slate-200 stroke-slate-500 text-slate-500 ">
+                    {id}
+                  </td>
+                  <td class="h-12 px-6 text-sm transition duration-300 border-t border-l first:border-l-0 border-slate-200 stroke-slate-500 text-slate-500 ">
+                    {role}
+                  </td>
+                  <td class="h-12 px-6 text-sm transition duration-300 border-t border-l first:border-l-0 border-slate-200 stroke-slate-500 text-slate-500 ">
+                    {externalSystem}
+                  </td>
+                  <td class="h-12 px-6 text-sm transition duration-300 border-t border-l first:border-l-0 border-slate-200 stroke-slate-500 text-slate-500 ">
+                    {externalId}
+                  </td>
+                </>
+              </tr>
+            ))
+          }
+        </tbody>
+      </table>
+    </div>
+  </div>
+</Layout>
