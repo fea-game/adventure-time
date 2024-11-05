@@ -152,7 +152,7 @@ export class User {
   public readonly externalId: string;
   public readonly externalSystem: "clerk";
 
-  constructor(params: Omit<User, "database">) {
+  constructor(params: User) {
     this.id = params.id;
     this.role = params.role;
     this.externalId = params.externalId;
