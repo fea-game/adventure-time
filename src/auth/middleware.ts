@@ -23,11 +23,10 @@ const isAdminRoute = createRouteMatcher(["/users"]);
 export const authorization = defineMiddleware(async (context, next) => {
   if (!isAdminRoute(context.request)) return next();
 
-  const externalId = context.locals.auth().userId;
-  const externalSystem = context.locals.authProvider;
+  const userId = context.locals.auth().userId;
 
-  if (!externalId) {
-    console.error("No externalId found!");
+  if (!userId) {
+    console.error("No userId found!");
     return next("/");
   }
 
@@ -38,10 +37,7 @@ export const authorization = defineMiddleware(async (context, next) => {
     return next("/");
   }
 
-  const userResult = await User.findByExternalId(
-    { externalSystem, externalId },
-    database.value
-  );
+  const userResult = await User.findById(userId, database.value);
 
   if (userResult.isError) {
     console.error("Error while trying to fetch user!", userResult.error);

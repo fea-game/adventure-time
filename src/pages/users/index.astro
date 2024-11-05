@@ -46,21 +46,11 @@ const currentUser = await Astro.locals.currentUser();
               class="h-12 px-6 text-sm font-medium border-l first:border-l-0 stroke-slate-700 text-slate-700 bg-slate-100"
               >Role</th
             >
-            <th
-              scope="col"
-              class="h-12 px-6 text-sm font-medium border-l first:border-l-0 stroke-slate-700 text-slate-700 bg-slate-100"
-              >External System</th
-            >
-            <th
-              scope="col"
-              class="h-12 px-6 text-sm font-medium border-l first:border-l-0 stroke-slate-700 text-slate-700 bg-slate-100"
-              >External Id</th
-            >
           </tr>
         </thead>
         <tbody>
           {
-            users.map(({ id, role, externalId, externalSystem }) => (
+            users.map(({ id, role }) => (
               <tr class="transition-colors duration-300 hover:bg-slate-50">
                 <>
                   <td class="h-12 px-6 text-sm transition duration-300 border-t border-l first:border-l-0 border-slate-200 stroke-slate-500 text-slate-500 ">
@@ -68,12 +58,6 @@ const currentUser = await Astro.locals.currentUser();
                   </td>
                   <td class="h-12 px-6 text-sm transition duration-300 border-t border-l first:border-l-0 border-slate-200 stroke-slate-500 text-slate-500 ">
                     {role}
-                  </td>
-                  <td class="h-12 px-6 text-sm transition duration-300 border-t border-l first:border-l-0 border-slate-200 stroke-slate-500 text-slate-500 ">
-                    {externalSystem}
-                  </td>
-                  <td class="h-12 px-6 text-sm transition duration-300 border-t border-l first:border-l-0 border-slate-200 stroke-slate-500 text-slate-500 ">
-                    {externalId}
                   </td>
                 </>
               </tr>

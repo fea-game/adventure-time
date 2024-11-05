@@ -7,7 +7,7 @@ if (!process.env.TURSO_DATABASE_URL || !process.env.TURSO_AUTH_TOKEN)
   throw new Error("Database is not configured!");
 
 export default {
-  schema: "./src/common/repository/schema.ts",
+  schema: "./src/database/schema/index.ts",
   out: "./db/migrations",
   dialect: "turso",
   dbCredentials: {
