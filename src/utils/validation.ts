@@ -1,30 +1,5 @@
 import type { inferFormattedError, ZodType } from "zod";
 
-export const required = <T extends Record<string, any>, K extends string, M>(
-  obj: T,
-  key: K,
-  isValid: (val: unknown) => val is M
-): obj is T & { [P in K]: M } => {
-  return key in obj && isValid(obj[key]);
-};
-
-export const optional = <T extends Record<string, any>, K extends string, M>(
-  obj: T,
-  key: K,
-  type: string
-): obj is T & { [P in K]: M } => {
-  return (
-    !(key in obj) ||
-    typeof obj[key] === type ||
-    typeof obj[key] == null ||
-    typeof obj[key] === undefined
-  );
-};
-
-export function isStringPresent(str: unknown): str is string {
-  return typeof str === "string" && !!str.length;
-}
-
 export function assertIsValid<
   T,
   S extends Pick<ZodType, "safeParse"> = Pick<ZodType, "safeParse">
