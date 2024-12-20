@@ -1,4 +1,3 @@
-import type { InferSelectModel } from "drizzle-orm";
 import { real, text, sqliteTable } from "drizzle-orm/sqlite-core";
 import { createSelectSchema } from "drizzle-zod";
 import { v4 as uuidv4 } from "uuid";
@@ -16,6 +15,6 @@ export const llms = sqliteTable("Llm", {
   presencePenalty: real(),
 });
 
-export type Llm = InferSelectModel<typeof llms>;
+export type Llm = typeof llms.$inferSelect;
 
 export const LlmSelectSchema = createSelectSchema(llms);

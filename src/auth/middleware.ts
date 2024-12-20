@@ -17,7 +17,7 @@ export const authentication = clerkMiddleware((auth, context, next) => {
   return next();
 });
 
-const isAdminRoute = createRouteMatcher(["/users"]);
+const isAdminRoute = createRouteMatcher(["/admin(.*)"]);
 
 let users: UserRepository | undefined = undefined;
 

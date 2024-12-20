@@ -13,6 +13,7 @@ export abstract class SqliteRepository<T extends { id: number | string }>
   constructor(table: any, fromRow: (row: any) => T) {
     const databaseResult = getDatabase();
     if (databaseResult.isError) {
+      console.error(databaseResult.error)
       throw new Error(databaseResult.error.message, { cause: e });
     }
 

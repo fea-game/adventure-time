@@ -1,14 +1,11 @@
 ---
-import Layout from "../../layouts/Layout.astro";
+import Layout from "../../../layouts/Layout.astro";
 
-import { getDatabase } from "../../database/getDatabase";
-import { User } from "../../context/user/UserRepository";
+import { UserRepository } from "../../../context/user/UserRepository";
 
-const database = getDatabase();
+const userRepository = new UserRepository();
 
-if (database.isError) throw database.error;
-
-const usersResult = await User.all(database.value);
+const usersResult = await userRepository.all();
 
 if (usersResult.isError) throw usersResult.error;
 
@@ -52,14 +49,12 @@ const currentUser = await Astro.locals.currentUser();
           {
             users.map(({ id, role }) => (
               <tr class="transition-colors duration-300 hover:bg-slate-50">
-                <>
                   <td class="h-12 px-6 text-sm transition duration-300 border-t border-l first:border-l-0 border-slate-200 stroke-slate-500 text-slate-500 ">
                     {id}
                   </td>
                   <td class="h-12 px-6 text-sm transition duration-300 border-t border-l first:border-l-0 border-slate-200 stroke-slate-500 text-slate-500 ">
                     {role}
                   </td>
-                </>
               </tr>
             ))
           }
