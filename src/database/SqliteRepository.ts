@@ -13,8 +13,7 @@ export abstract class SqliteRepository<T extends { id: number | string }>
   constructor(table: any, fromRow: (row: any) => T) {
     const databaseResult = getDatabase();
     if (databaseResult.isError) {
-      console.error(databaseResult.error)
-      throw new Error(databaseResult.error.message, { cause: e });
+      throw new Error(databaseResult.error.message, { cause: databaseResult.error });
     }
 
     this.database = databaseResult.value;
@@ -48,8 +47,13 @@ export abstract class SqliteRepository<T extends { id: number | string }>
     return ok(result.value !== null);
   }
 
-  async all(): Promise<Result<T[], Error>> {
+  async all(userId?: string): Promise<Result<T[], Error>> {
     try {
+      if (!!userId?.length) {
+        const result = await this.database.select().from(this.table).where(eq(this.table.userId, userId));
+        return ok(result.map(this.fromRow));
+      }
+
       const result = await this.database.select().from(this.table);
       return ok(result.map(this.fromRow));
     } catch (e) {

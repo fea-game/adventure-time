@@ -1,0 +1,121 @@
+---
+import Layout from "../../layouts/Layout.astro";
+
+import { LlmRepository } from "../../context/llm/LlmRepository";
+import Link from "../../components/Link.astro";
+
+const currentUser = await Astro.locals.currentUser();
+if (!currentUser) throw new Error("No Session!");
+
+const llmRepository = new LlmRepository();
+const llmsResult = await llmRepository.all(currentUser.id);
+
+if (llmsResult.isError) throw llmsResult.error;
+const llms = llmsResult.value;
+---
+
+<Layout title="Adventure Time - LLMs">
+  <h1 class="text-4xl font-bold font-heading px-8 xl:px-16 py-8 xl:py-16">
+    LLMs
+  </h1>
+  <div class="px-8 xl:px-16 flex flex-col gap-y-4">
+    <div class="w-full overflow-x-auto">
+      <table
+        class="w-full text-left border border-separate rounded border-slate-200"
+        cellspacing="0"
+      >
+        <thead>
+          <tr>
+            <th
+              scope="col"
+              class="h-12 px-6 text-sm font-medium border-l first:border-l-0 stroke-slate-700 text-slate-700 bg-slate-100"
+            >
+              Id
+            </th>
+            <th
+              scope="col"
+              class="h-12 px-6 text-sm font-medium border-l first:border-l-0 stroke-slate-700 text-slate-700 bg-slate-100"
+            >
+              UserId
+            </th>
+            <th
+              scope="col"
+              class="h-12 px-6 text-sm font-medium border-l first:border-l-0 stroke-slate-700 text-slate-700 bg-slate-100"
+            >
+              Name
+            </th>
+            <th
+              scope="col"
+              class="h-12 px-6 text-sm font-medium border-l first:border-l-0 stroke-slate-700 text-slate-700 bg-slate-100"
+            >
+              Description
+            </th>
+            <th
+              scope="col"
+              class="h-12 px-6 text-sm font-medium border-l first:border-l-0 stroke-slate-700 text-slate-700 bg-slate-100"
+            >
+              Provider
+            </th>
+            <th
+              scope="col"
+              class="h-12 px-6 text-sm font-medium border-l first:border-l-0 stroke-slate-700 text-slate-700 bg-slate-100"
+            >
+              Model
+            </th>
+            <th
+              scope="col"
+              class="h-12 px-6 text-sm font-medium border-l first:border-l-0 stroke-slate-700 text-slate-700 bg-slate-100"
+            >
+              API Key
+            </th>
+            <th
+              scope="col"
+              class="h-12 px-6 text-sm font-medium border-l first:border-l-0 stroke-slate-700 text-slate-700 bg-slate-100"
+            >
+              Config
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          {
+            llms.map(({ id, userId, name, description, config: { provider, model, apiKey, ...config } }) => (
+              <tr class="transition-colors duration-300 hover:bg-slate-50">
+                  <td class="h-12 px-6 text-sm transition duration-300 border-t border-l first:border-l-0 border-slate-200 stroke-slate-500 text-slate-500 ">
+                    {id}
+                  </td>
+                  <td class="h-12 px-6 text-sm transition duration-300 border-t border-l first:border-l-0 border-slate-200 stroke-slate-500 text-slate-500 ">
+                    {userId}
+                  </td>
+                  <td class="h-12 px-6 text-sm transition duration-300 border-t border-l first:border-l-0 border-slate-200 stroke-slate-500 text-slate-500 ">
+                    {name}
+                  </td>
+                  <td class="h-12 px-6 text-sm transition duration-300 border-t border-l first:border-l-0 border-slate-200 stroke-slate-500 text-slate-500 ">
+                    {description}
+                  </td>
+                  <td class="h-12 px-6 text-sm transition duration-300 border-t border-l first:border-l-0 border-slate-200 stroke-slate-500 text-slate-500 ">
+                    {provider}
+                  </td>
+                  <td class="h-12 px-6 text-sm transition duration-300 border-t border-l first:border-l-0 border-slate-200 stroke-slate-500 text-slate-500 ">
+                    {model}
+                  </td>
+                  <td class="h-12 px-6 text-sm transition duration-300 border-t border-l first:border-l-0 border-slate-200 stroke-slate-500 text-slate-500 ">
+                    {apiKey}
+                  </td>
+                  <td class="h-12 px-6 text-sm transition duration-300 border-t border-l first:border-l-0 border-slate-200 stroke-slate-500 text-slate-500 ">
+                    <div class="py- whitespace-pre font-mono">{JSON.stringify(config, null ,2)}</div>
+                  </td>
+              </tr>
+            ))
+          }
+        </tbody>
+      </table>
+    </div>
+    <div class="self-end">
+      <Link as="button" href="/llms/create">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5" aria-label="Plus icon" role="graphics-symbol">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+        </svg>
+      </Link>
+    </div>
+  </div>
+</Layout>

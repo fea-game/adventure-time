@@ -57,6 +57,20 @@
       "when": 1730806241538,
       "tag": "0007_ambitious_thunderbolts",
       "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "6",
+      "when": 1734720380156,
+      "tag": "0008_familiar_randall_flagg",
+      "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "6",
+      "when": 1734802303730,
+      "tag": "0009_slim_colossus",
+      "breakpoints": true
     }
   ]
 }

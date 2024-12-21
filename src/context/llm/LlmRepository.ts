@@ -6,9 +6,11 @@ import {
 import { err, ok, type Result } from "../../utils/Result";
 import { SqliteRepository } from "../../database/SqliteRepository";
 import { assertIsValid } from "../../utils/validation";
+import type { User } from "../user/UserRepository";
 
 export type Llm = {
   readonly id: string;
+  readonly userId: string;
   readonly name: string;
   readonly description?: string | undefined | null;
   readonly config: LlmConfig;
@@ -16,6 +18,7 @@ export type Llm = {
 
 export type LlmConfig = {
   apiKey: string;
+  provider: LlmRow["provider"];
   model?: string | undefined | null; // Default model to use
   temperature?: number | undefined | null; // Default temperature for creativity
   topP?: number | undefined | null; // Default nucleus sampling value
@@ -32,10 +35,11 @@ export class LlmRepository extends SqliteRepository<Llm> {
   private static fromRow(row: any): Llm {
     assertIsValid<LlmRow>(row, LlmSelectSchema);
 
-    const { id, name, description, ...config } = row;
+    const { id, userId, name, description, ...config } = row;
 
     const llm: Llm = {
       id,
+      userId,
       name,
       description,
       config,
@@ -44,14 +48,20 @@ export class LlmRepository extends SqliteRepository<Llm> {
     return llm;
   }
 
+  override async all(userId: Llm["userId"]): Promise<Result<Llm[], Error>> {
+    return super.all(userId);
+  }
+
   async create(newLlm: Omit<Llm, "id">): Promise<Result<Llm, Error>> {
     try {
       const result = await this.database
         .insert(this.table)
         .values({
+          userId: newLlm.userId,
           name: newLlm.name,
           description: newLlm.description ?? null,
           apiKey: newLlm.config.apiKey,
+          provider: newLlm.config.provider,
           model: newLlm.config.model ?? null,
           temperature: newLlm.config.temperature ?? null,
           topP: newLlm.config.topP ?? null,
